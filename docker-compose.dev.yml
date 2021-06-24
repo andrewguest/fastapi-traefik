@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+    web:
+        build:
+            context: ./services/api
+        command: gunicorn main:app --bind 0.0.0.0:5000 -w 4 -k uvicorn.workers.UvicornWorker
+        expose:
+            - 5000
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.fastapi.rule=Host(`fastapi.localhost`)"  # send a request with a header of 'Host: fastapi.localhost'
+
+    traefik:
+        image: traefik:v2.4
+        ports:
+            - "80:80"
+            - "8080:8080"
+        volumes:
+            - "/var/run/docker.sock:/var/run/docker.sock:ro"
+        labels:
+            # Enable Traefik for this service, to make it available in the public network
+            - traefik.enable=true
+            # Define the port inside of the Docker service to use
+            - traefik.http.services.traefik-dashboard.loadbalancer.server.port=8080
+            # Use the special Traefik service api@internal with the web UI/Dashboard
+            - traefik.http.routers.traefik-dashboard-https.service=api@internal
+        command:
+            # Enable Docker in Traefik, so that it reads labels from Docker services
+            - --providers.docker
+            # Do not expose all Docker services, only the ones explicitly exposed
+            - --providers.docker.exposedbydefault=false
+             # Enable the access log, with HTTP requests
+            - --accesslog
+            # Enable the Traefik log, for configurations and errors
+            - --log
+            # Enable the Dashboard and API
+            - --api
