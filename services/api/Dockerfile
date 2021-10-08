@@ -1,4 +1,4 @@
-FROM python:3.10-rc-slim
+FROM python:3.11-rc-slim
 
 ENV WORKDIR=/usr/src/app
 ENV USER=app
