@@ -5,5 +5,5 @@ gunicorn==20.1.0
 h11==0.12.0
 pydantic==1.8.2
 starlette==0.17.1
-typing-extensions==4.0.0
+typing-extensions==4.0.1
 uvicorn==0.15.0
