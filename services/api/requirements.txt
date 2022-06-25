@@ -6,4 +6,4 @@ h11==0.13.0
 pydantic==1.9.1
 starlette==0.20.3
 typing-extensions==4.2.0
-uvicorn==0.17.6
+uvicorn==0.18.1
